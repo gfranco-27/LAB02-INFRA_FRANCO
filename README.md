@@ -81,8 +81,69 @@ docker volume inspect lab02-infra_franco_db_data
 
   Tmpfs mounnts: Este es temporal y solo persiste en la memoria del host, cuando el contenedor se detiene el tmpfs mount se elimina. 
 
+## Guía de ejecución
 
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/TU_USUARIO/LAB02-INFRA_FRANCO.git
+cd LAB02-INFRA_FRANCO
+```
 
+### 2. Configurar variables de entorno
+Copiar la plantilla y ajustar los valores si se desea:
+```bash
+cp .env.example .env
+```
+
+### 3. Levantar los servicios
+```bash
+docker compose up -d --build
+```
+Este comando construye localmente las 3 imágenes de la API (`api1`, `api2`,
+`api3`) y descarga la imagen oficial `postgres:16-alpine` para la base de
+datos.
+
+### 4. Verificar que todo esté corriendo
+```bash
+docker compose ps
+```
+Deben aparecer 4 contenedores activos: `lab_db`, `lab_api1`, `lab_api2`,
+`lab_api3`.
+
+### 5. Probar las APIs
+```bash
+curl http://localhost:3001/
+curl http://localhost:3002/
+curl http://localhost:3003/
+```
+Cada una debe responder con el mensaje configurado en `API_MESSAGE`.
+
+### 6. Verificar la base de datos
+```bash
+docker exec -it lab_db psql -U <DB_USER> -d <DB_NAME>
+```
+(usar los valores definidos en el `.env`)
+
+### 7. Verificar persistencia del volumen (opcional pero recomendado)
+Dentro de `psql`:
+```sql
+CREATE TABLE prueba (id SERIAL PRIMARY KEY, nombre TEXT);
+INSERT INTO prueba (nombre) VALUES ('dato de persistencia');
+\q
+```
+Reiniciar sin borrar volúmenes:
+```bash
+docker compose down
+docker compose up -d
+docker exec -it lab_db psql -U <DB_USER> -d <DB_NAME> -c "SELECT * FROM prueba;"
+```
+Si el dato sigue apareciendo, el volumen nombrado `db_data` está persistiendo
+correctamente la información.
+
+### 8. Detener el proyecto
+```bash
+docker compose down
+```
 
 
   
