@@ -1,0 +1,11 @@
+# Entorno
+.env
+# Node
+node_modules/
+npm-debug.log
+#Docker
+*.log
+#SO / Editores
+.DS_Strone
+.idea/
+.vscode/
