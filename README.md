@@ -39,7 +39,16 @@ docker compose down
 ## Volúmenes usados
 - **Volumen nombrado** (`db_data`): usado en el servicio `db` para persistir
   los datos de PostgreSQL aunque el contenedor se elimine.
-- **Bind mount** (`./api/logs/apiX:/app/logs`): usado en cada API para
-  mapear una carpeta del host dentro del contenedor.
+```yaml
+services:
+  db:
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
+volumes:
+  db_data:
+```
+
+**¿Por qué este tipo de volumen y no otro?**
+Se usó este volumen ya que es gestionado por docker, este funcionaria en cualquier maquina donde se clone el proyecto
   
