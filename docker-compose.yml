@@ -1,0 +1,75 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lab_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/postgresql/data 
+    networks:
+      - lab_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api1:
+    build:
+      context: ./api
+    container_name: lab_api1
+    environment:
+      MESSAGE: ${API_MESSAGE}
+      PORT: ${API_PORT}
+    ports:
+      - "3001:3000"
+    volumes:
+      - ./api/logs/api1:/app/logs             
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lab_network
+
+  api2:
+    build:
+      context: ./api
+    container_name: lab_api2
+    environment:
+      MESSAGE: ${API_MESSAGE}
+      PORT: ${API_PORT}
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./api/logs/api2:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lab_network
+
+  api3:
+    build:
+      context: ./api
+    container_name: lab_api3
+    environment:
+      MESSAGE: ${API_MESSAGE}
+      PORT: ${API_PORT}
+    ports:
+      - "3003:3000"
+    volumes:
+      - ./api/logs/api3:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - lab_network
+
+networks:
+  lab_network:
+    driver: bridge
+
+volumes:
+  db_data:
