@@ -51,4 +51,38 @@ volumes:
 
 **¿Por qué este tipo de volumen y no otro?**
 Se usó este volumen ya que es gestionado por docker, este funcionaria en cualquier maquina donde se clone el proyecto
+
+Se puede confirmar que el volumen existe y sigue ahí con:
+```bash
+docker volume ls
+docker volume inspect lab02-infra_franco_db_data
+```
+
+## PREGUNTAS : Tipos de redes y volumenes en Docker
+- Tipos de redes
+
+  Bridge: ES el driver por defecto, se usa cuando la app corre en un contenedor que necesita comunicarse con otros del mismo host.
+
+  Host: Elimina el aislamiento de red entre el contenedor y el host de Docker.
+
+  None: Aisla completamente a un contenedor del host y de otros contenedores.
+
+  Overlay: Conecta multiples demonios docker entre si y permite que los servicios de Swarm y los contenedores se comuniquen a través de distintos nodos, eliminando la necesidad de hacer ruteo al nivel de sistema operativo.
+
+  Ipvlan: Da control sobre el direccionamiento IPv4 e IPv6
+
+  Macvlan: Permite asignar una dirección MAC a un contenedor haciendo que aparezca como un dispositivo físico en la red.
+
+- Tipos de Volumenes
+
+  Volumes: Son almacenes de datos persistentes creados y gestionados por docker. Es ideal para persistencia de datos generados y usados por contenedores docker.
+
+  Bind mounts: Enlaza una ruta específica del sistema de archivos del host con una ruta dentro del contenedor. Se usa cuando se necesita acceder a archivos o directorios tanto desde el contenedor como desde el host.
+
+  Tmpfs mounnts: Este es temporal y solo persiste en la memoria del host, cuando el contenedor se detiene el tmpfs mount se elimina. 
+
+
+
+
+
   
